@@ -13,8 +13,15 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
+    final ThemeData tema = ThemeData();
+    return MaterialApp(
+      home: const MyHomePage(),
+      theme: tema.copyWith(
+        colorScheme: tema.colorScheme.copyWith(
+          primary: Colors.green,
+          secondary: Colors.purple,
+        )
+      ),
     );
   }
 }
@@ -31,14 +38,14 @@ class _MyHomePageState extends State<MyHomePage> {
    final _transactions = [
       Transaction(
         id: 't1',
-      title: 'Novo Tênis de Corrida',
-      value: 310.70,
-      date: DateTime.now()),
+        title: 'Novo Tênis de Corrida',
+        value: 310.70,
+        date: DateTime.now()),
       Transaction(
         id: 't2',
-      title: 'Conta de luz',
-      value: 240.70,
-      date: DateTime.now()),
+        title: 'Conta de luz',
+        value: 240.70,
+        date: DateTime.now()),
     ];
 
     
@@ -53,13 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _transactions.add(newTransaction);
       });
+      Navigator.of(context).pop();
     }
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context, 
       builder: (_) {
-        return TransactionForm((str, str2) {});
+        return TransactionForm(_addTransaction);
       }
     );
   }
@@ -81,11 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-                const SizedBox(
+                SizedBox(
                 child: Card(
                   elevation: 5,
-                  color: Colors.amber,
-                  child: Text('Grafico'),
+                  color: Theme.of(context).colorScheme.primary,
+                  child: const Text('Grafico'),
                 ),
               ),
               TransactionList(_transactions),
