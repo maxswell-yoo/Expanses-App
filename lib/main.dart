@@ -20,7 +20,22 @@ class ExpensesApp extends StatelessWidget {
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.green,
           secondary: Colors.purple,
-        )
+        ),
+        textTheme: tema.textTheme.copyWith(
+          titleLarge: const TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -36,16 +51,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
    final _transactions = [
-      Transaction(
-        id: 't1',
-        title: 'Novo Tênis de Corrida',
-        value: 310.70,
-        date: DateTime.now()),
-      Transaction(
-        id: 't2',
-        title: 'Conta de luz',
-        value: 240.70,
-        date: DateTime.now()),
+      // Transaction(
+      //   id: 't1',
+      //   title: 'Novo Tênis de Corrida',
+      //   value: 310.70,
+      //   date: DateTime.now()),
+      // Transaction(
+      //   id: 't2',
+      //   title: 'Conta de luz',
+      //   value: 240.70,
+      //   date: DateTime.now()),
     ];
 
     
