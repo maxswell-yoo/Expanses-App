@@ -29,6 +29,10 @@ class ExpensesApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
+          labelLarge: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          )
         ),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
@@ -52,24 +56,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
    final List<Transaction> _transactions = [
-      Transaction(
-        id: 't0',
-        title: 'Novo Tênis de Corrida',
-        value: 310.70,
-        date: DateTime.now().subtract(const Duration(days: 33))
-      ),
-      Transaction(
-        id: 't1',
-        title: 'Novo Tênis de Corrida',
-        value: 310.70,
-        date: DateTime.now().subtract(const Duration(days: 3))
-      ),
-      Transaction(
-        id: 't2',
-        title: 'Conta de luz',
-        value: 240.70,
-        date: DateTime.now().subtract(const Duration(days: 4))
-      ),
+      // Transaction(
+      //   id: 't0',
+      //   title: 'Novo Tênis de Corrida',
+      //   value: 310.70,
+      //   date: DateTime.now().subtract(const Duration(days: 33))
+      // ),
+      // Transaction(
+      //   id: 't1',
+      //   title: 'Novo Tênis de Corrida',
+      //   value: 310.70,
+      //   date: DateTime.now().subtract(const Duration(days: 3))
+      // ),
+      // Transaction(
+      //   id: 't2',
+      //   title: 'Conta de luz',
+      //   value: 240.70,
+      //   date: DateTime.now().subtract(const Duration(days: 4))
+      // ),
     ];
 
     List<Transaction> get _recentTransactions {
@@ -81,12 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     
-    _addTransaction(String title, double value) {
+    _addTransaction(String title, double value, DateTime date) {
       final newTransaction = Transaction(
         id: Random().nextDouble().toString(),
         title: title,
         value: value,
-        date: DateTime.now()
+        date: date
       );
 
       setState(() {
@@ -94,6 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
       });
       Navigator.of(context).pop();
     }
+
+  _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) {
+          return tr.id == id;
+      });
+    });
+  }
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
@@ -112,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.add),
-              color: Colors.white60,
+              color: Colors.white,
               onPressed: () => _openTransactionFormModal(context),
             )
           ] ,
@@ -122,12 +134,12 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Chart(_recentTransactions),
-              TransactionList(_transactions),
+              TransactionList(_transactions, _deleteTransaction),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           onPressed: () => _openTransactionFormModal(context),
           child: const Icon(Icons.add),
