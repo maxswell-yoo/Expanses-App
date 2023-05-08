@@ -5,8 +5,6 @@ import '../models/transaction.dart';
 import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
 
-
-
 main() => runApp(const ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
@@ -23,17 +21,16 @@ class ExpensesApp extends StatelessWidget {
           secondary: Colors.purple,
         ),
         textTheme: tema.textTheme.copyWith(
-          titleLarge: const TextStyle(
-            fontFamily: 'OpenSans',
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          labelLarge: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          )
-        ),
+            titleLarge: const TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            labelLarge: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            )),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -54,95 +51,105 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _transactions = [];
+  bool _showChart = false;
 
-   final List<Transaction> _transactions = [
-      // Transaction(
-      //   id: 't0',
-      //   title: 'Novo Tênis de Corrida',
-      //   value: 310.70,
-      //   date: DateTime.now().subtract(const Duration(days: 33))
-      // ),
-      // Transaction(
-      //   id: 't1',
-      //   title: 'Novo Tênis de Corrida',
-      //   value: 310.70,
-      //   date: DateTime.now().subtract(const Duration(days: 3))
-      // ),
-      // Transaction(
-      //   id: 't2',
-      //   title: 'Conta de luz',
-      //   value: 240.70,
-      //   date: DateTime.now().subtract(const Duration(days: 4))
-      // ),
-    ];
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date!.isAfter(DateTime.now().subtract(
+        const Duration(days: 7),
+      ));
+    }).toList();
+  }
 
-    List<Transaction> get _recentTransactions {
-      return _transactions.where((tr) {
-        return tr.date!.isAfter(DateTime.now().subtract(
-          const Duration(days: 7),
-        ));
-      }).toList();
-    }
-
-    
-    _addTransaction(String title, double value, DateTime date) {
-      final newTransaction = Transaction(
+  _addTransaction(String title, double value, DateTime date) {
+    final newTransaction = Transaction(
         id: Random().nextDouble().toString(),
         title: title,
         value: value,
-        date: date
-      );
+        date: date);
 
-      setState(() {
-        _transactions.add(newTransaction);
-      });
-      Navigator.of(context).pop();
-    }
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+    Navigator.of(context).pop();
+  }
 
   _deleteTransaction(String id) {
     setState(() {
       _transactions.removeWhere((tr) {
-          return tr.id == id;
+        return tr.id == id;
       });
     });
   }
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
-      context: context, 
-      builder: (_) {
-        return TransactionForm(_addTransaction);
-      }
-    );
+        context: context,
+        builder: (_) {
+          return TransactionForm(_addTransaction);
+        });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Expenses"),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add),
-              color: Colors.white,
-              onPressed: () => _openTransactionFormModal(context),
-            )
-          ] ,
+    final appBar = AppBar(
+      title: Text(
+        "Expenses",
+        style: TextStyle(
+          fontSize: 20 * MediaQuery.of(context).textScaleFactor,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Chart(_recentTransactions),
-              TransactionList(_transactions, _deleteTransaction),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
+      ),
+      centerTitle: true,
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.add),
+          color: Colors.white,
           onPressed: () => _openTransactionFormModal(context),
-          child: const Icon(Icons.add),
+        )
+      ],
+    );
+
+    final availabelHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Exibir Gráfico',
+                    style: Theme.of(context).textTheme.titleLarge),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            _showChart
+                ? Container(
+                    height: availabelHeight * 0.3,
+                    child: Chart(_recentTransactions))
+                : Container(
+                    height: availabelHeight * 0.7,
+                    child: TransactionList(_transactions, _deleteTransaction)),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        onPressed: () => _openTransactionFormModal(context),
+        child: const Icon(Icons.add),
       ),
     );
   }
