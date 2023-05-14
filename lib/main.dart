@@ -129,21 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
         )
     ];
 
-    final appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: const Text('Despesas Pessoais'),
-            trailing: Row(mainAxisSize: MainAxisSize.min, children: actions),
-          )
-        : AppBar(
-            title: Text(
-              "Expenses",
-              style: TextStyle(
-                fontSize: 20 * mediaQuery.textScaleFactor,
-              ),
-            ),
-            centerTitle: true,
-            actions: actions,
-          );
+    final PreferredSizeWidget appBar = AppBar(
+      title: const Text('Despesas Pessoais'),
+      actions: actions,
+    );
 
     final availabelHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
@@ -154,22 +143,6 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          // if(isLandscape)
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: <Widget>[
-          //     Text('Exibir Gráfico',
-          //         style: Theme.of(context).textTheme.titleLarge),
-          //     Switch(
-          //       value: _showChart,
-          //       onChanged: (value) {
-          //         setState(() {
-          //           _showChart = value;
-          //         });
-          //       },
-          //     ),
-          //   ],
-          // ),
           if (_showChart || !isLandscape)
             Container(
                 height: availabelHeight * (isLandscape ? 0.7 : 0.3),
@@ -184,7 +157,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            navigationBar: appBar,
+            navigationBar: CupertinoNavigationBar(
+              middle: const Text('Despesas Pessoais'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: actions,
+              ),
+            ),
             child: bodyPage,
           )
         : Scaffold(
