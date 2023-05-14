@@ -10,7 +10,9 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
+        ? LayoutBuilder(
+        builder: (ctx, constrains) {
+          return Column(
             children: <Widget>[
               const SizedBox(height: 20),
               Text(
@@ -19,14 +21,15 @@ class TransactionList extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                height: 200,
+                height: constrains.maxHeight * 0.6,
                 child: Image.asset(
                   "assets/images/waiting.png",
                   fit: BoxFit.cover,
                 ),
               )
             ],
-          )
+          );
+        })
         : ListView.builder(
             itemCount: transactions.length,
             itemBuilder: (ctx, index) {
@@ -56,7 +59,11 @@ class TransactionList extends StatelessWidget {
                   subtitle: Text(
                     DateFormat('d MMM y').format(tr.date!)
                   ),
-                  trailing: IconButton(
+                  trailing: MediaQuery.of(context).size.width > 400 ? 
+                  TextButton(
+                    onPressed: () => onRemove(tr.id!), 
+                    child: Text('Remover', style: TextStyle(color: Theme.of(context).colorScheme.error),))
+                  : IconButton(
                     icon: const Icon(Icons.delete),
                     color: Theme.of(context).colorScheme.error,
                     onPressed: () => onRemove(tr.id!)),
