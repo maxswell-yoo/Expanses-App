@@ -108,11 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     bool isLandscape = mediaQuery.orientation == Orientation.landscape;
-
     final iconList = Platform.isIOS ? CupertinoIcons.refresh : Icons.list;
-    
     final chartList = Platform.isIOS ? CupertinoIcons.refresh : Icons.show_chart;
-    
     final actions = <Widget>[
       _getIconButton(
         Platform.isIOS ? CupertinoIcons.add : Icons.add,
@@ -128,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         )
     ];
-
     final PreferredSizeWidget appBar = AppBar(
       title: const Text('Despesas Pessoais'),
       actions: actions,
@@ -144,11 +140,11 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           if (_showChart || !isLandscape)
-            Container(
+            SizedBox(
                 height: availabelHeight * (isLandscape ? 0.7 : 0.3),
                 child: Chart(_recentTransactions)),
           if (!_showChart || !isLandscape)
-            Container(
+            SizedBox(
                 height: availabelHeight * (isLandscape ? 1 : 0.7),
                 child: TransactionList(_transactions, _deleteTransaction)),
         ],
